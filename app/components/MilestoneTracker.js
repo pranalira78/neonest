@@ -1,8 +1,9 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import { Lock, PlusCircle, PartyPopper, Check, MinusCircle } from "lucide-react";
+import { Lock, PlusCircle, PartyPopper, Check, MinusCircle, Gift } from "lucide-react";
 import Link from "next/link";
 import { Button } from "../components/ui/Button";
+import toysData from "../data/toys.json";
 
 const defaultMilestones = {
   0: ["Lifts head", "Responds to sound"],
@@ -16,6 +17,18 @@ const getMonthDiff = (dob) => {
   const birth = new Date(dob);
   return Math.max(0, Math.floor((now - birth) / (1000 * 60 * 60 * 24 * 30.44)));
 };
+
+function getToysForMonth(month) {
+  return toysData.filter(toy => {
+    const age = toy.age;
+    if (age === "0-3m" && month >= 0 && month < 3) return true;
+    if (age === "3-6m" && month >= 3 && month < 6) return true;
+    if (age === "6-12m" && month >= 6 && month < 12) return true;
+    if (age === "12-18m" && month >= 12 && month < 18) return true;
+    if (age === "18-24m+" && month >= 18) return true;
+    return false;
+  });
+}
 
 export default function MilestoneTracker({ babyDOB }) {
   const [milestones, setMilestones] = useState(defaultMilestones);
@@ -201,6 +214,21 @@ export default function MilestoneTracker({ babyDOB }) {
                   {i < currentMonth && completedAll && (
                     <div className="absolute inset-0 flex justify-center items-center bg-white/5 backdrop-blur-sm rounded-3xl pointer-events-none">
                       <PartyPopper className="w-16 h-16 text-purple-600 opacity-70 animate-bounce" />
+                    </div>
+                  )}
+
+                  {i < currentMonth && completedAll && (
+                    <div className="bg-gradient-to-r from-green-100 to-emerald-100 border border-green-200 rounded-xl p-3 mt-2">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Gift className="w-5 h-5 text-green-600" />
+                        <span className="text-sm font-semibold text-green-700">Suggested Toys for Month {i + 1}</span>
+                      </div>
+                      <div className="text-xs text-green-600 mb-2">
+                        {getToysForMonth(i).slice(0, 2).map(toy => toy.name).join(", ")}
+                      </div>
+                      <Link href="/Toys" className="text-xs text-green-700 hover:text-green-800 hover:underline font-medium">
+                        View all toys →
+                      </Link>
                     </div>
                   )}
 
