@@ -4,6 +4,7 @@ import { Lock, PlusCircle, PartyPopper, Check, MinusCircle, Gift } from "lucide-
 import Link from "next/link";
 import { Button } from "../components/ui/Button";
 import toysData from "../data/toys.json";
+import { useMilestoneStore } from "../../lib/store/milestoneStore";
 
 const defaultMilestones = {
   0: ["Lifts head", "Responds to sound"],
@@ -32,7 +33,7 @@ function getToysForMonth(month) {
 
 export default function MilestoneTracker({ babyDOB }) {
   const [milestones, setMilestones] = useState(defaultMilestones);
-  const [completed, setCompleted] = useState({});
+  const { completed, toggleMilestone, completedMonths } = useMilestoneStore();
   const [visibleMonth, setVisibleMonth] = useState(0);
   const [currentMonth, setCurrentMonth] = useState(0);
   const [activeAddInput, setActiveAddInput] = useState(null);
@@ -53,10 +54,7 @@ export default function MilestoneTracker({ babyDOB }) {
     scrollToCard(visibleMonth);
   }, [visibleMonth]);
 
-  const toggleComplete = (month, milestone) => {
-    const key = `${month}:${milestone}`;
-    setCompleted((prev) => ({ ...prev, [key]: !prev[key] }));
-  };
+
 
   const handleAdd = (month) => {
     if (newMilestone.trim()) {
@@ -142,7 +140,7 @@ export default function MilestoneTracker({ babyDOB }) {
                           transition-all duration-300 group hover:bg-white/50 dark:hover:bg-pink-300
                           ${completed[`${i}:${m}`] ? "bg-gradient-to-r from-green-100 to-emerald-100 border border-green-200" : "bg-white/30  border border-white/50"}
                         `}>
-                        <div className="flex items-center gap-3 cursor-pointer flex-1" onClick={() => i <= currentMonth && toggleComplete(i, m)}>
+                        <div className="flex items-center gap-3 cursor-pointer flex-1" onClick={() => i <= currentMonth && toggleMilestone(i, m)}>
                           <div
                             className={`
                             w-4 h-4 rounded-full transition-all duration-300 flex items-center justify-center
@@ -211,13 +209,13 @@ export default function MilestoneTracker({ babyDOB }) {
                     </div>
                   )}
 
-                  {i < currentMonth && completedAll && (
+                  {i < currentMonth && completedMonths.has(i) && (
                     <div className="absolute inset-0 flex justify-center items-center bg-white/5 backdrop-blur-sm rounded-3xl pointer-events-none">
                       <PartyPopper className="w-16 h-16 text-purple-600 opacity-70 animate-bounce" />
                     </div>
                   )}
 
-                  {i < currentMonth && completedAll && (
+                  {i < currentMonth && completedMonths.has(i) && (
                     <div className="bg-gradient-to-r from-green-100 to-emerald-100 border border-green-200 rounded-xl p-3 mt-2">
                       <div className="flex items-center gap-2 mb-2">
                         <Gift className="w-5 h-5 text-green-600" />
@@ -232,7 +230,7 @@ export default function MilestoneTracker({ babyDOB }) {
                     </div>
                   )}
 
-                  {i < currentMonth && !completedAll && (
+                  {i < currentMonth && !completedMonths.has(i) && (
                     <div className="bg-gradient-to-r from-orange-100 to-red-100 border border-orange-200 rounded-xl p-3">
                       <Link href="/NeonestAi" className="text-sm text-orange-700 hover:text-red-700 hover:underline font-medium w-full text-left transition-colors duration-200">
                         ⚠ Ask Chatbot about milestone delay?

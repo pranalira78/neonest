@@ -12,34 +12,34 @@ export default function ToysPage() {
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-4">
             <Gift className="w-8 h-8 text-yellow-600" />
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-yellow-600 via-pink-600 to-purple-600 bg-clip-text text-transparent">
+            <h1 className="text-5xl font-bold bg-gradient-to-r from-yellow-600 via-pink-600 to-purple-600 bg-clip-text text-transparent">
               Developmental Toys
             </h1>
           </div>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-            Discover age-appropriate toys that support your baby&apos;s growth and learning through play.
+          <p className="text-2xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+            Discover age-appropriate toys that support your baby&apos;s growth and learning.
           </p>
         </div>
 
         {/* Age Filter */}
         <div className="flex justify-center mb-8">
-          <div className="flex items-center gap-4 bg-white/90 dark:bg-gray-800/90 rounded-full px-6 py-3 shadow-lg">
-            <Baby className="w-5 h-5 text-pink-600" />
+          <div className="flex items-center gap-4 bg-white/90 dark:bg-gray-800/90 rounded-full px-8 py-4 shadow-lg">
+            <Baby className="w-6 h-6 text-pink-600" />
             <input
               type="number"
               placeholder="Enter baby&apos;s age in months"
               value={babyAgeMonths}
               onChange={(e) => setBabyAgeMonths(e.target.value)}
-              className="bg-transparent border-none outline-none text-gray-700 dark:text-gray-300 placeholder-gray-500 dark:placeholder-gray-400 w-48"
+              className="bg-transparent border-none outline-none text-lg text-gray-700 dark:text-gray-300 placeholder-gray-500 dark:placeholder-gray-400 w-64"
               min="0"
               max="24"
             />
-            <span className="text-gray-500 dark:text-gray-400">months</span>
+            <span className="text-lg text-gray-500 dark:text-gray-400">months</span>
           </div>
         </div>
 
         {/* Toys Section */}
-        <ToysSection babyAgeMonths={babyAgeMonths} />
+        <ToysSection babyAgeMonths={babyAgeMonths} showAll={true} />
       </div>
     </div>
   );
